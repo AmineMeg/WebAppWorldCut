@@ -1,0 +1,86 @@
+<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body m-sm-3 m-md-5">
+									<div class="mb-4">
+										Bonjour <strong>{{vente.client.nom}} {{vente.client.prenom}}</strong>,
+										<br /> Voici votre recu pour votre paiement d'un montant de <strong> {{vente.prix}}€ </strong> à World Cut Paris.
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<div class="text-muted">Paiement No.</div>
+											<strong>{{vente.id}}</strong>
+										</div>
+										<div class="col-md-6 text-md-right">
+											<div class="text-muted">Date de paiement</div>
+											<strong>{{vente.date|date("d/m/Y")}}</strong>
+										</div>
+									</div>
+
+									<hr class="my-4" />
+
+									<div class="row mb-4">
+										<div class="col-md-6">
+											<div class="text-muted">Client</div>
+											<strong>
+												{{vente.client.nom}} {{vente.client.prenom}}
+											</strong>
+																			
+											<a href="#">
+												{{vente.client.email}}
+											</a>
+										</div>
+											<div class="col-md-6 text-md-right">
+													<div class="text-muted">Coiffeur : {{vente.vendeur.nom}} <br> Paiement à</div>
+													<strong>
+													World Cut Paris
+													</strong>
+														<p>
+															70 rue Didot <br> 75014 <br> Paris <br> France <br>
+															<a href="#">
+																
+															</a>
+														</p>
+											</div>
+										</div>
+
+										<table class="table table-sm">
+											<thead>
+												<tr>
+													<th>Description</th>
+													<th>Prix Indicatif</th>
+													<th>Remise</th>               
+													<th class="text-right">Prix</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for ligne in vente.lignes %}
+													<tr>
+														<td>
+															{{ ligne.nomPresta.nom }}
+														</td>
+														<td>
+															{{ ligne.prixInd }}€
+														</td>
+														<td>
+															{{ ligne.remise }} %
+														</td>
+														<td class="text-right">
+															{{ ligne.prixFinal }}€
+														</td>
+													</tr>
+												{% endfor %}
+													<tr>
+														<th>&nbsp;</th>
+														<th>Total </th>
+														<th class="text-right"> {{vente.prix}}€ </th>
+													</tr>
+											</tbody>
+										</table>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>

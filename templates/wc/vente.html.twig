@@ -1,0 +1,573 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello WcController!{% endblock %}
+{% block stylesheets %}
+<style>
+    th:hover { background-color : LIGHTGREY }
+</style> 
+{% endblock %}
+{% block body %}
+    <div class="container-fluid p-0">
+					<div class="row mb-2 mb-xl-3">
+						<div class="col-auto d-none d-sm-block">
+							<h3><strong>Vente</strong></h3>
+						</div>
+
+						
+					</div>
+                    <div class="row">
+						<div id="vendeurCarte"class="col-12 col-md-6 col-xxl-2 d-flex order-2 order-xxl-3">
+							<div class="card flex-fill w-100">
+								<div class="card-header">
+
+									<h5 class="card-title mb-0">Coiffeur</h5>
+									<table class="table table-stripped table-hover table-bordered">
+											<h5>Vendeur selectionnné : </h5>
+											<tbody id="vendeurSel" class="og" style="backgroung-color: grey">
+													<tr id="vendeurSel">
+														<td id="idVendeur"></td><td id="nomVendeur"></td>
+													</tr>
+											</tbody>
+										</table>
+								</div>
+								<div class="card-body d-flex">
+									<div class="align-self-center w-100">
+										<table id="JavaScriptTdable" class="table table-stripped table-hover table-bordered">
+
+											<tbody id="JavaScriptTable" class="og" style="backgroung-color: grey">
+												{% for ligne in listeVendeurs %}
+													<tr id="{{ligne.id}}" onclick="clone(this.id, '{{ligne.nom}}');">
+														<td>
+															{{ ligne.id }}
+														</td>
+														
+														<td>
+															{{ ligne.Nom }}
+														</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+							<div class="card flex-fill w-100">
+								<div class="card-header">
+
+									<h5 class="card-title mb-0">Selectionner une prestation</h5>
+								</div>
+								<div class="card-body px-4">
+									<div>
+										<table id="tri" class="table table-stripped table-bordered">
+											<tbody>
+												<tr>
+												{% for ligne in categories %}
+													<th id="{{ligne}}" > {{ligne}} </th>
+												{% endfor %}
+												</tr>
+											</tbody>
+										</table>
+                                        <table id="prestations" class="table table-stripped table-hover table-bordered">
+                                        	<tbody id="original" class="og" style="backgroung-color: grey">
+												{% for ligne in listePrestations %}
+													<tr id='{{ligne.id}}' onclick="addTicket(this.id, '{{ligne.nom}}', '{{ligne.prix}}');">
+														<th class={{ ligne.category }} style="display: none;">{{ ligne.category }}</th>
+														{% if ligne.isArticle %}
+														<td>
+															{{ ligne.marque }}
+														</td>
+														{% endif %}
+														<td>
+															{{ ligne.nom }}
+														</td>
+														{% if ligne.isArticle %}
+														<td class="stock">
+															{{ ligne.stock }}
+														</td>
+														{% endif %}
+														<td class="text-right">
+														 	{{ ligne.prix }}€
+														</td>
+													</tr>
+												{% endfor %}
+												
+											</tbody>
+                                        </table>
+                                    </div>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-md-6 col-xxl-4 d-flex order-1 order-xxl-1">
+							<div class="card flex-fill">
+								<div class="card-header">
+
+									<h5 class="card-title mb-0">Client</h5>
+								</div>
+								<div class="card-body d-flex">
+									<div class="align-self-center w-100">
+										<div class="chart">
+											<div id="customer">
+												<h3><div id="idClient">{{idClient}}</div> <strong>{{nomClient}}</strong> {{prenomClient}} </h3><br><br> Derniere visite: {{derniereVisite|date("d/m/Y")}}
+											</div>
+												{% if vente != null %} <div>Coiffeur : {{vente.vendeur}}</div> 
+											
+											<table class="table table-sm">
+											<thead>
+												<tr>
+													<th>Description</th>
+													<th>Prix Indicatif</th>
+													<th>Remise</th>              
+													<th class="text-right">Prix</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for ligne in vente.lignes %}
+													<tr>
+														<td>
+															{{ ligne.nomPresta.nom }}
+														</td>
+														<td>
+															{{ ligne.prixInd }}€
+														</td>
+														<td>
+															{{ ligne.remise }} %
+														</td>
+														<td class="text-right">
+															{{ ligne.prixFinal }}€
+														</td>
+													</tr>
+												{% endfor %}
+													<tr>
+														<th>&nbsp;</th>
+														<th>Total </th>
+														<th class="text-right"> {{vente.prix}}€ </th>
+													</tr>
+											</tbody>
+										</table>
+										<div><h5>Commentaire : </h5> 
+											{{vente.commentaire}}
+										</div>
+										{% endif %}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xl-6 col-xxl-5 d-flex">
+							<div class="w-100">
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Total</h5>
+												<h1 id="prixTTL" class="display-5 mt-1 mb-3">0</h1><h1>€</h1>
+											</div>
+										</div>
+										
+										<div class="card">
+										<a target="_blank" class="btn btn-outline-primary btn-block" onclick="test();">
+											<div class="card-body">
+												<h1 class="display-5 mt-1 mb-3">Enregistrer la vente</h1>
+												<div class="mb-1">
+													Finir la vente
+												</div>
+											</div>
+											</a>
+										</div>
+										
+									</div>
+									<div class="col-sm-6">
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Commentaire / detail couleur</h5>
+												<div class="mb-1">
+													<textarea id="commentaire" class="form-control" rows="2" placeholder="Laissez des details ici" style="margin-top: 0px; margin-bottom: 0px; height: 86px;"></textarea>
+												</div>
+											</div>
+										</div>
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Supprimer la derninere ligne</h5>
+												<div class="mb-1">
+													<button class="btn btn-danger" style="margin-top: 0px; margin-bottom: 0px; height: 86px;" onclick="removeRow();"><i class="fas fa-times"></i> Supprimer</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xl-6 col-xxl-7">
+							<div class="card flex-fill w-100">
+								<div class="card-header">
+
+									<h5 class="card-title mb-0">Ticket en cours:</h5>
+								</div>
+								<div class="card-body py-3">
+									<div class="chart chart-sm">
+										<table id="ticket" class="table table-stripped table-hover table-bordered">
+											<tbody class="listeTicket" style="backgroung-color: grey">
+													<tr>
+														<td>
+															<strong>id</strong>
+														</td>
+														<td>
+															<strong>nom</strong>
+														</td>
+														<td>
+															<strong>prix(en €)</strong>
+														</td>
+														<td>
+															<strong>remise(en %)</strong>
+														</td>
+														<td>
+															<strong>prix final(en €)</strong>
+														</td>																									
+													</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					
+
+
+				</div>
+				<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+				<script type="text/javascript">
+					var sac = 1;
+					function clone(id, nom) {
+
+						var idV = document.getElementById("idVendeur");
+						idV.innerHTML = id;
+						var nomV = document.getElementById("nomVendeur");
+						nomV.innerHTML = nom;
+					}
+
+					function addTicket(id, nom, prix) {
+						var tr = document.getElementById(id);
+
+						if(tr.cells[0].innerHTML == "Produits"){
+							if(Number(tr.cells[3].innerText, 10) <= 0){
+								alert("Le produit " + nom + "est en quantitée " + Number(tr.cells[3].innerText, 10)+", erreur de stock")
+							}
+								
+								tr.cells[3].innerText = Number(tr.cells[3].innerText, 10) - 1;
+
+								var ticket = document.getElementById("ticket");
+								var nouvelleLigne = ticket.insertRow();
+								var newId = sac;
+								nouvelleLigne.id = newId+"ticket";
+
+								var idRow = nouvelleLigne.insertCell(0);
+								var idTxt = document.createTextNode(id);
+								idRow.appendChild(idTxt);
+								
+								var nomRow = nouvelleLigne.insertCell(1);
+								var nomTxt = document.createTextNode(nom);
+								nomRow.appendChild(nomTxt);
+								
+								var prixRow = nouvelleLigne.insertCell(2);
+								var prixTxt = document.createTextNode(prix);
+								prixRow.appendChild(prixTxt);
+								
+								var remiseRow = nouvelleLigne.insertCell(3);
+								var input = document.createElement("input");
+								input.type = "number";
+								remiseRow.appendChild(input);
+								
+								var prixfRow = nouvelleLigne.insertCell(4);
+								var input2 = document.createElement("input");
+								input2.type = "number";
+								input2.value = prix;
+								prixfRow.appendChild(input2);
+								
+								input.setAttribute('onKeyUp', updatePrice(newId));
+								input.onkeyup = function(){updatePrice(newId);};
+								
+								input2.setAttribute('onKeyUp', updateRemise(newId));
+								input2.onkeyup = function(){updateRemise(newId);};
+
+								input.setAttribute('onClick', updatePrice(newId));
+								input.onkeyup = function(){updatePrice(newId);};
+								
+								input2.setAttribute('onClick', updateRemise(newId));
+								input2.onkeyup = function(){updateRemise(newId);};
+								
+								sac++;
+						} else {
+							console.log("YAAAY");
+							var ticket = document.getElementById("ticket");
+							var nouvelleLigne = ticket.insertRow();
+							var newId = sac;
+							nouvelleLigne.id = newId+"ticket";
+
+							var idRow = nouvelleLigne.insertCell(0);
+							var idTxt = document.createTextNode(id);
+							idRow.appendChild(idTxt);
+							
+							var nomRow = nouvelleLigne.insertCell(1);
+							var nomTxt = document.createTextNode(nom);
+							nomRow.appendChild(nomTxt);
+							
+							var prixRow = nouvelleLigne.insertCell(2);
+							var prixTxt = document.createTextNode(prix);
+							prixRow.appendChild(prixTxt);
+							
+							var remiseRow = nouvelleLigne.insertCell(3);
+							var input = document.createElement("input");
+							input.type = "number";
+							remiseRow.appendChild(input);
+							
+							var prixfRow = nouvelleLigne.insertCell(4);
+							var input2 = document.createElement("input");
+							input2.type = "number";
+							input2.value = prix;
+							prixfRow.appendChild(input2);
+							
+							input.setAttribute('onKeyUp', updatePrice(newId));
+							input.onkeyup = function(){updatePrice(newId);};
+							
+							input2.setAttribute('onKeyUp', updateRemise(newId));
+							input2.onkeyup = function(){updateRemise(newId);};
+
+							input.setAttribute('onClick', updatePrice(newId));
+							input.onkeyup = function(){updatePrice(newId);};
+							
+							input2.setAttribute('onClick', updateRemise(newId));
+							input2.onkeyup = function(){updateRemise(newId);};
+							
+							sac++;
+						}
+
+						updateTtl();
+
+					}
+
+					function removeRow() {
+						var table = document.getElementById('ticket');
+						var rowCount = table.rows.length;
+						if(rowCount > 1){
+							var presta = document.getElementById(table.rows[rowCount - 1].cells[0].innerText);
+							console.log(presta)
+							if(presta.cells[0].innerHTML == "Produits"){
+								presta.cells[3].innerText = Number(presta.cells[3].innerText, 10) + 1;
+							}
+							table.deleteRow(rowCount -1);
+						}
+						updateTtl()
+					}
+
+
+					function updatePrice(id) {
+						console.log(id);
+						var srcid = id + "ticket";
+						var row = document.getElementById(srcid);
+						var remise = Number(row.cells[3].firstChild.value, 10);
+						var prixInd = Number(row.cells[2].innerHTML, 10);
+						if(Number.isInteger(remise)){
+							row.cells[4].firstChild.value = prixInd - ((prixInd * remise) / 100);
+						}
+						updateTtl()
+					}
+
+					
+					function updateRemise(id) {
+						var srcid = id + "ticket";
+						var row = document.getElementById(srcid);
+						var prixF = Number(row.cells[4].firstChild.value, 10);
+						var prixInd = Number(row.cells[2].innerHTML, 10);
+						if(Number.isInteger(prixF)){
+							row.cells[3].firstChild.value = 100-((prixF * 100) / prixInd);
+						}
+						updateTtl()
+					}
+
+
+					function updateTtl(){
+						var table = document.getElementById("ticket");
+						var prixTtl = 0;
+						for(var i = 1; i < table.rows.length; i++) { 
+							var tableRows = table.rows[i].cells;
+							 prixTtl = Number(prixTtl) + Number(tableRows[4].firstChild.value);
+						}
+						var ttl = document.getElementById("prixTTL");
+						ttl.innerHTML = prixTtl; 
+					}
+
+					function myFunction(id) {
+						// Declare variables
+						var input, filter, table, tr, td, i, txtValue;
+						input = document.getElementById(id);
+						filter = input.innerText;
+						table = document.getElementById("prestations");
+						tr = table.getElementsByTagName("tr");
+
+						// Loop through all table rows, and hide those who don't match the search query
+						for (i = 0; i < tr.length; i++) {
+							td = tr[i].getElementsByTagName("th");
+							if (td) {
+							txtValue = td[0].innerText;
+							if (txtValue == filter) {
+								tr[i].style.display = "";
+							} else {
+								tr[i].style.display = "none";
+							}
+							}
+						}
+					}
+
+					(function($){
+						$(document).ready(function(){
+						$('#tri tr th').each(function(){
+							$(this).attr("onclick", "myFunction(this.id);");	
+						})
+						table = document.getElementById("prestations");
+						myFunction("Articles");
+					})})(jQuery);
+
+
+
+					
+
+
+					/*var table = document.getElementById('JavaScriptTable');
+
+					for(var i = 0; i < table.rows.length; i++) {
+						table.rows[i].addEventListener('click', function() {
+							
+							var c = this.cells.lastChild.cloneNode(false));							
+							$('tbody[id="vendeurSel"]').append(c);	
+
+						});
+						var x = document.getElementById("vendeurSel");
+						x.deleteCell(0);
+					}
+					*/
+				</script>
+
+				{# <script type="text/javascript">
+					jQuery(document).ready(function() {
+						var searchRequest = null;
+						$("#search").keyup(function() {
+							var minlength = 3;
+							var that = this;
+							var value = $(this).val();
+							var entitySelector = $("#listeTicket").html('');
+							if (value.length >= minlength ) {
+								if (searchRequest != null)
+									searchRequest.abort();
+								searchRequest = $.ajax({
+									type: "GET",
+									url: "{{ path('creerVente') }}",
+									data: {
+										'q' : value
+									},
+									dataType: "text",
+									success: function(msg){
+										//we need to check if the value is the same
+										if (value==$(that).val()) {
+											var result = JSON.parse(msg);
+											$.each(result, function(key, arr) {
+												$.each(arr, function(id, value) {
+													if (key == 'entities') {
+														if (id != 'error') {
+															entitySelector.append('<tr><td><a href="/client/'+id+'/vente">'+value+'</a></td></tr>');
+														} else {
+															entitySelector.append('<li class="errorLi">'+value+'</li>');
+														}
+													}
+												});
+											});
+										}
+									}
+								});
+							}
+						});
+					});
+				</script> #}
+				<script>
+				function test(){
+					if(Number(document.getElementById("idVendeur").innerHTML, 10) != 0){
+						var table = document.getElementById("ticket");
+						var hArray = [];
+						for(var i = 1; i < table.rows.length; i++) { 
+							var hash = new Object;
+							hash["idPresta"] = Number(table.rows[i].cells[0].innerHTML, 10);
+							hash["prixInd"] = Number(table.rows[i].cells[2].innerHTML, 10);
+							hash["remise"] = Number(table.rows[i].cells[3].firstChild.value, 10);
+							hash["prixF"] = Number(table.rows[i].cells[4].firstChild.value, 10);
+							hArray.push(hash);
+						}
+						if (hArray.length != 0){
+						var vente = new Object;
+						vente["idVendeur"] = Number(document.getElementById("idVendeur").innerHTML,10);	
+						vente["idClient"] = Number(document.getElementById("idClient").innerHTML, 10);
+						vente["ticket"] = hArray;
+						vente["commentaire"] = document.getElementById("commentaire").value;	
+						vente["prixTTL"] = Number(document.getElementById("prixTTL").innerHTML, 10);	
+						console.log(vente)
+						
+						var data = JSON.stringify(vente);
+
+						const http = new XMLHttpRequest()
+						http.open('POST', '/recu')
+						http.setRequestHeader('Content-type', 'application/json')
+						http.send(data) // Make sure to stringify
+						http.onload = function() {
+							// Do whatever with response
+							
+							route = "{{ path('recuVente', { 'idVente': "PLACEHOLDER" }) }}";
+							route = route.replace("PLACEHOLDER", http.responseText);
+							alert(route)
+							window.location.replace(route);
+						}
+
+
+						} else {
+							alert("Aucune prestation selectionnée");
+						}
+						
+					} else {
+						console.log("YAY");
+						alert("veuillez selectionner un vendeur");
+					}
+				}
+
+					
+					$(document).ready(function (){
+					var table = $('#listeTicket').DataTable({
+						pageLength: 4
+					});
+
+					// Handle form submission event
+					$('#frm-example2').on('submit', function(e){
+						// Prevent actual form submission
+						e.preventDefault();
+
+						// Serialize form data
+						var data = table.$('input,select,textarea').serializeArray();
+
+						// Include extra data if necessary
+						// data.push({'name': 'extra_param', 'value': 'extra_value'});
+
+						// Submit form data via Ajax
+						$.post({
+							url: 'echo_request.php',
+							data: data
+						});
+					});
+					});
+
+	
+				</script>
+{% endblock %}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+        {% endblock %} 
+        <link href="\AdminKit\examples\css\app.css" rel="stylesheet">
+    </head>
+        <body>
+        <div class="wrapper">
+            <nav id="sidebar" class="sidebar">
+                <div class="sidebar-content js-simplebar">
+                    <a class="sidebar-brand" href="{{path('wc')}}">
+            <span class="align-middle">AdminKit</span>
+            </a>
+
+                    <ul class="sidebar-nav">
+                        <li class="sidebar-header">
+                            Vente
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{path('rechercheClient')}}">
+                                <i class="align-middle" data-feather="briefcase"></i> <span class="align-middle">Deja client</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{path('nouveauClient')}}">
+                        <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Nouveau client</span>
+                        </a>
+                        </li>
+
+
+                        
+
+                        <li class="sidebar-header">
+                            Outils administratifs
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{path('reglerStock')}}">
+                <i class="align-middle" data-feather="list"></i> <span class="align-middle">Regler stock</span>
+                </a>
+                        </li>
+
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{path('vendeur')}}">
+                <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Editer / consulter Vendeurs</span>
+                </a>
+                        </li>
+
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{path('prestation')}}">
+                <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Editer / consulter prestations</span>
+                </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </nav>
+
+            <div class="main">
+                <main class="content">
+                    {% block body %}
+                    {% endblock %}
+                </main>
+            </div>
+        </div>
+{% block javascripts %}{% endblock %}
+</body>
+           
+        
+    
+</html>

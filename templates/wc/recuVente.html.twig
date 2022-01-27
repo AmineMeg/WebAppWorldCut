@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello WcController!{% endblock %}
+{% block head %}
+{% endblock %}
+{% block body %}
+
+
+<div id="content" class="container-fluid p-0">
+
+	<h1 class="h3 mb-3">Invoice</h1>
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body m-sm-3 m-md-5">
+					<div class="mb-4">
+						Hello <strong>{{vente.client.nom}} {{vente.client.prenom}}</strong><div id="clientID" data-value="{{vente.client.id}}"></div>,
+						<br /> This is the receipt for a payment of <strong> {{vente.prix}}€ </strong> you made to World
+						Cut Paris.
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="text-muted">Payment No.</div>
+							<strong data-value="{{vente.id}}" id="venteID">{{vente.id}}</strong>
+						</div>
+						<div class="col-md-6 text-md-right">
+							<div class="text-muted">Payment Date</div>
+							<strong>{{vente.date|date("d/m/Y")}}</strong>
+						</div>
+					</div>
+
+					<hr class="my-4" />
+
+					<div class="row mb-4">
+						<div class="col-md-6">
+							<div class="text-muted">Client</div>
+							<strong>
+								{{vente.client.nom}} {{vente.client.prenom}}
+							</strong>
+
+							<a href="#">
+								{{vente.client.email}}
+							</a>
+						</div>
+						<div class="col-md-6 text-md-right">
+							<div class="text-muted">Coiffeur : {{vente.vendeur.nom}} <br> Payment To</div>
+							<strong>
+								World Cut Paris
+							</strong>
+							<p>
+								70 rue Didot <br> 75014 <br> Paris <br> France <br>
+								<a href="#">
+									info@adminkit.com
+								</a>
+							</p>
+						</div>
+					</div>
+
+					<table class="table table-sm">
+						<thead>
+							<tr>
+								<th>Description</th>
+								<th>Prix Indicatif</th>
+								<th>Remise</th> Helvetica
+								<th class="text-right">Prix</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for ligne in vente.lignes %}
+							<tr>
+								<td>
+									{{ ligne.nomPresta.nom }}
+								</td>
+								<td>
+									{{ ligne.prixInd }}€
+								</td>
+								<td>
+									{{ ligne.remise }} %
+								</td>
+								<td class="text-right">
+									{{ ligne.prixFinal }}€
+								</td>
+							</tr>
+							{% endfor %}
+							<tr>
+								<th>&nbsp;</th>
+								<th>Total </th>
+								<th class="text-right"> {{vente.prix}}€ </th>
+							</tr>
+						</tbody>
+					</table>
+
+					<button class="btn btn-primary" onclick="sendMail();">
+						Print this receipt
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}}
+<!-- jQuery is necessary -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script>
+	function sendMail() {
+		searchRequest = $.ajax({
+			type: "GET",
+			url: "{{ path('sendEmail') }}",
+			data: $.param({
+				idVente: document.getElementById('venteID').getAttribute('data-value'),
+				idClient : document.getElementById('clientID').getAttribute('data-value')
+			}),
+			dataType: "text",
+			success: function (msg) {
+				//we need to check if the value is the same
+				alert(msg);
+			}
+		})
+	}
+</script>
+{% endblock %}

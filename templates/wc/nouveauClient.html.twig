@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello WcController!{% endblock %}
+{% block head %}
+{% endblock %}
+{% block body %}
+    <div class="container-fluid p-0">
+					<div class="row mb-2 mb-xl-3">
+						<div class="col-auto d-none d-sm-block">
+							<h3><strong>Vendeur</strong> manage</h3>
+						</div>
+
+					</div>
+                    <div class="row">
+						
+
+						<div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+							<div class="card flex-fill w-100">
+								<div class="card-header">
+									<h5 class="card-title mb-0">Liste vendeurs</h5>
+								</div>
+								<div class="form">
+												{{ form_start(formSignup) }}
+													{{form_row (formSignup.nom, {
+																	'attr':{
+																		'type' : "text",
+																		'class' : "form-controle",
+																		'placeholder' : 'Nom' 
+																		}
+													})}}
+
+														<br>
+													
+													{{form_row (formSignup.prenom, {
+																	'attr':{
+																		'type' : "text",
+																		'class' : "form-controle",
+																		'placeholder' : 'Prenom' 
+																		}
+													})}}
+
+														<br>
+
+													
+													{{form_row (formSignup.email, {
+																	'attr':{
+																		'type' : "email",
+																		'class' : "form-controle",
+																		'placeholder' : 'email' 
+																		}
+													})}}
+
+													
+														<br>
+
+													{{form_row (formSignup.numero, {
+																	'attr':{
+																		'type' : "tel",
+																		'class' : "form-controle",
+																		'placeholder' : 'Prenom' 
+																		}
+													})}}
+
+													
+														<br>
+
+														</div>
+														<div class="footer text-center">
+														<button type="submit" class="btn btn-succes">
+																Ajouter
+														</button>
+													</div>
+												{{ form_end(formSignup) }}
+											</div>
+							</div>
+						</div>
+						<div class="col-12 col-md-6 col-xxl-3 d-flex order-1 order-xxl-1">
+							
+						</div>
+					</div>
+
+					
+{% endblock %}
