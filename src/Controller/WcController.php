@@ -282,8 +282,13 @@ class WcController extends AbstractController
 
         $categories = array();
 
+        $marques = array();
+
         foreach($repoPrestation as $r){
             $categories[$r->getCategory()] = $r->getCategory();
+            if ($r->getIsArticle()) {
+                $marques[$r->getMarque()] = $r->getMarque();
+            }
         }
 
         
@@ -308,7 +313,8 @@ class WcController extends AbstractController
                 'derniereVisite' => null,
                 'listePrestations' => $repoPrestation,
                 'listeVendeurs' => $repoVendeur,
-                'categories' => $categories 
+                'categories' => $categories, 
+                'marques' => $marques
             ]);
         }
         return $this->render('wc/vente.html.twig', [
@@ -319,7 +325,8 @@ class WcController extends AbstractController
             'derniereVisite' => $vente->getDate(),
             'listePrestations' => $repoPrestation,
             'listeVendeurs' => $repoVendeur,
-            'categories' => $categories 
+            'categories' => $categories, 
+            'marques' => $marques
         ]);
     }
 

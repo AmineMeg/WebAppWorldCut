@@ -65,6 +65,21 @@
 												<tr>
 												{% for ligne in categories %}
 													<th id="{{ligne}}" > {{ligne}} </th>
+													{% if loop.index % 4 == 0%}
+													</tr><tr>
+													{% endif %}
+												{% endfor %}
+												</tr>
+											</tbody>
+										</table>
+										<table id="triArticles" class="table table-stripped table-bordered">
+											<tbody>
+												<tr>
+												{% for ligne in marques %}
+													<th id="{{ligne}}" class="marqueSelect"style="display: none;"> {{ligne}} </th>
+													{% if loop.index % 4 == 0%}
+													</tr><tr>
+													{% endif %}
 												{% endfor %}
 												</tr>
 											</tbody>
@@ -95,6 +110,9 @@
 												
 											</tbody>
                                         </table>
+										
+										
+										
                                     </div>
 								</div>
 							</div>
@@ -156,6 +174,38 @@
 							</div>
 						</div>
 					</div>
+					<div class="col-xl-6 col-xxl-12">
+							<div class="card flex-fill w-100">
+								<div class="card-header">
+
+									<h5 class="card-title mb-0">Ticket en cours:</h5>
+								</div>
+								<div class="card-body py-3">
+									<div class="chart chart-sm">
+										<table id="ticket" class="table table-stripped table-hover table-bordered">
+											<tbody class="listeTicket" style="backgroung-color: grey">
+													<tr>
+														<td>
+															<strong>id</strong>
+														</td>
+														<td>
+															<strong>nom</strong>
+														</td>
+														<td>
+															<strong>prix(en €)</strong>
+														</td>
+														<td>
+															<strong>remise(en %)</strong>
+														</td>
+														<td>
+															<strong>prix final(en €)</strong>
+														</td>																									
+													</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
 
 					<div class="row">
 						<div class="col-xl-6 col-xxl-5 d-flex">
@@ -203,38 +253,7 @@
 							</div>
 						</div>
 
-						<div class="col-xl-6 col-xxl-7">
-							<div class="card flex-fill w-100">
-								<div class="card-header">
-
-									<h5 class="card-title mb-0">Ticket en cours:</h5>
-								</div>
-								<div class="card-body py-3">
-									<div class="chart chart-sm">
-										<table id="ticket" class="table table-stripped table-hover table-bordered">
-											<tbody class="listeTicket" style="backgroung-color: grey">
-													<tr>
-														<td>
-															<strong>id</strong>
-														</td>
-														<td>
-															<strong>nom</strong>
-														</td>
-														<td>
-															<strong>prix(en €)</strong>
-														</td>
-														<td>
-															<strong>remise(en %)</strong>
-														</td>
-														<td>
-															<strong>prix final(en €)</strong>
-														</td>																									
-													</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
+						
 						</div>
 					</div>
 
@@ -409,6 +428,19 @@
 						var input, filter, table, tr, td, i, txtValue;
 						input = document.getElementById(id);
 						filter = input.innerText;
+						if (filter == "Articles"){
+							headers = document.getElementById("triArticles").getElementsByTagName("th")
+							console.log(headers)
+							for (i = 0; i < headers.length; i++){
+								headers.item(i).style.display = ''
+							}
+						} else {
+							headers = document.getElementById("triArticles").getElementsByTagName("th")
+							console.log(headers)
+							for (i = 0; i < headers.length; i++){
+								headers.item(i).style.display = 'none'
+							}
+						}
 						table = document.getElementById("prestations");
 						tr = table.getElementsByTagName("tr");
 
@@ -418,6 +450,40 @@
 							if (td) {
 							txtValue = td[0].innerText;
 							if (txtValue == filter) {
+							
+								tr[i].style.display = "";
+							} else {
+								tr[i].style.display = "none";
+							}
+							}
+						}
+					}
+
+					function myFunction2(id) {
+						console.log("J'y suissssss")
+						// Declare variables
+						var input, filter, table, tr, td, i, txtValue;
+						input = document.getElementById(id);
+						filter = input.innerText;
+						table = document.getElementById("prestations");
+						tr = table.getElementsByTagName("tr");
+						for (i = 0; i < tr.length; i++) {
+							td = tr[i].getElementsByTagName("td");
+							if (td) {
+								console.log(td)
+							txtValue = td[0].innerText;	
+							tr[i].style.display = "";
+							}
+						}
+
+						// Loop through all table rows, and hide those who don't match the search query
+						for (i = 0; i < tr.length; i++) {
+							td = tr[i].getElementsByTagName("td");
+							if (td) {
+								console.log(td)
+							txtValue = td[0].innerText;
+							if (txtValue == filter) {
+							
 								tr[i].style.display = "";
 							} else {
 								tr[i].style.display = "none";
@@ -431,8 +497,11 @@
 						$('#tri tr th').each(function(){
 							$(this).attr("onclick", "myFunction(this.id);");	
 						})
+						$(".marqueSelect").each(function(){
+							$(this).attr("onclick","myFunction2(this.id)");
+						})
 						table = document.getElementById("prestations");
-						myFunction("Articles");
+						myFunction("Femme");
 					})})(jQuery);
 
 

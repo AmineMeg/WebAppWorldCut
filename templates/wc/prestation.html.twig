@@ -50,6 +50,9 @@
 												<tr>
 												{% for ligne in categories %}
 													<th id="{{ligne}}" > {{ligne}} </th>
+													{% if loop.index % 4 == 0%}
+													</tr><tr>
+													{% endif %}
 												{% endfor %}
 												</tr>
 											</tbody>

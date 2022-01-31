@@ -17,15 +17,18 @@
 							<div class="card flex-fill w-100">
 								<div class="card-header">
 
-									<h5 class="card-title mb-0">Liste vendeurs</h5>
+									<h5 class="card-title mb-0">Liste articles</h5>
 								</div>
 								<div class="card-body px-4">
 									<div class="col-sm">
-										<table id="tri" class="table table-stripped table-bordered">
+										<table id="triArticles" class="table table-stripped table-bordered">
 											<tbody>
 												<tr>
 												{% for ligne in marques %}
-													<th id="{{ligne}}" > {{ligne}} </th>
+													<th id="{{ligne}}" class="marqueSelect"> {{ligne}} </th>
+													{% if loop.index % 4 == 0%}
+													</tr><tr>
+													{% endif %}
 												{% endfor %}
 												</tr>
 											</tbody>
@@ -60,7 +63,7 @@
 							<div class="card flex-fill">
 								<div class="card-header">
 
-								<h5 class="card-title mb-0">Creer une prestation</h5>
+								<h5 class="card-title mb-0">Creer un article</h5>
 								</div>
 								<div class="card-body d-flex">
 									<div class="align-self-center w-100">
@@ -121,6 +124,8 @@
 
 
 				</div>
+				<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 				<script>
 
 				function addTicket(id, nom, prix, marque, stock) {
@@ -161,15 +166,50 @@
 							}
 						}
 					}
+					function myFunction2(id) {
+						console.log("J'y suissssss")
+						// Declare variables
+						var input, filter, table, tr, td, i, txtValue;
+						input = document.getElementById(id);
+						filter = input.innerText;
+						table = document.getElementById("prestations");
+						tr = table.getElementsByTagName("tr");
+						for (i = 0; i < tr.length; i++) {
+							td = tr[i].getElementsByTagName("td");
+							if (td) {
+								console.log(td)
+							txtValue = td[0].innerText;	
+							tr[i].style.display = "";
+							}
+						}
+
+						// Loop through all table rows, and hide those who don't match the search query
+						for (i = 0; i < tr.length; i++) {
+							td = tr[i].getElementsByTagName("td");
+							if (td) {
+								console.log(td)
+							txtValue = td[0].innerText;
+							if (txtValue == filter) {
+							
+								tr[i].style.display = "";
+							} else {
+								tr[i].style.display = "none";
+							}
+							}
+						}
+					}
 
 					(function($){
 						$(document).ready(function(){
-							myFunction("Coupe");
+
+							$(".marqueSelect").each(function(){
+								$(this).attr("onclick","myFunction2(this.id)");
+							})
 							$('#tri tr th').each(function(){
 								console.log(this);
 								$(this).attr("onclick", "myFunction(this.id);");	
 							})
-							
+							myFunction2("Revlon");
 
 							$("#prestation_form_nom").on("change paste keyup", function(sel) {
 								
